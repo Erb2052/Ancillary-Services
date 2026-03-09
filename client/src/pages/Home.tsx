@@ -11,20 +11,23 @@ import {
   ArrowRight,
   ArrowLeft,
   Loader2,
-  FlaskConical,
-  Sparkles,
   Shield,
+  Sparkles,
+  FlaskConical,
 } from "lucide-react";
 import type { HealthProduct } from "../../../shared/products";
 
-// ─── Step definitions ────────────────────────────────────────────────────────
+// ─── Constants ────────────────────────────────────────────────────────────────
+const FOUNTAIN_LIFE_LOGO =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663295938284/VZcpay2J5y3Rr3CApR9sWp/fountain_life_logo_ebaeae49.webp";
+
 const STEPS = [
-  { id: 1, label: "Overview" },
-  { id: 2, label: "Select Tests" },
-  { id: 3, label: "Review Cart" },
+  { id: 1, label: "Overview", sub: "Your add-on journey" },
+  { id: 2, label: "Select Tests", sub: "Choose your items" },
+  { id: 3, label: "Review Cart", sub: "Confirm & checkout" },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 function formatPrice(cents: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -33,130 +36,177 @@ function formatPrice(cents: number) {
   }).format(cents / 100);
 }
 
-// ─── Step Indicator ──────────────────────────────────────────────────────────
-function StepIndicator({ current }: { current: number }) {
-  return (
-    <div className="flex items-center justify-center gap-0 mb-8 sm:mb-12">
-      {STEPS.map((step, idx) => (
-        <div key={step.id} className="flex items-center">
-          <div className="flex flex-col items-center gap-1">
-            <div
-              className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
-                current > step.id
-                  ? "bg-emerald-500 text-white"
-                  : current === step.id
-                  ? "bg-primary text-primary-foreground shadow-lg"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              {current > step.id ? (
-                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              ) : (
-                step.id
-              )}
-            </div>
-            <span
-              className={`text-xs font-medium hidden sm:block ${
-                current === step.id
-                  ? "text-primary"
-                  : current > step.id
-                  ? "text-emerald-600"
-                  : "text-muted-foreground"
-              }`}
-            >
-              {step.label}
-            </span>
-          </div>
-          {idx < STEPS.length - 1 && (
-            <div
-              className={`w-16 sm:w-24 h-0.5 mx-2 transition-all duration-300 ${
-                current > step.id ? "bg-emerald-400" : "bg-border"
-              }`}
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
+// ─── Fountain Life Progress Header ───────────────────────────────────────────
+function FountainLifeHeader({ step }: { step: number }) {
+  const pct = Math.round(((step - 1) / (STEPS.length - 1)) * 100);
 
-// ─── Step 1: Overview / Intro ─────────────────────────────────────────────────
-function StepIntro({ onNext }: { onNext: () => void }) {
   return (
-    <div className="max-w-3xl mx-auto text-center">
-      {/* Hero */}
-      <div
-        className="rounded-2xl sm:rounded-3xl p-8 sm:p-14 mb-8 sm:mb-10 relative overflow-hidden"
-        style={{
-          background: "linear-gradient(135deg, oklch(0.22 0.06 250) 0%, oklch(0.30 0.07 255) 50%, oklch(0.25 0.05 245) 100%)",
-          color: "white",
-        }}
-      >
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-4 right-8 text-6xl">⚕️</div>
-          <div className="absolute bottom-4 left-8 text-5xl">🔬</div>
-        </div>
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/15 rounded-full px-4 py-1.5 text-sm font-medium mb-5" style={{ color: 'white' }}>
-            <Sparkles className="w-4 h-4 text-yellow-300" />
-            Precision Health Add-Ons
-          </div>
-          <h1
-            className="text-3xl sm:text-5xl font-bold mb-4 leading-tight"
-            style={{ fontFamily: "'Playfair Display', serif", color: 'white' }}
+    <div className="bg-white border-b border-border">
+      {/* Progress bar */}
+      <div className="h-1.5 bg-muted w-full">
+        <div
+          className="h-full rounded-r-full transition-all duration-700"
+          style={{
+            width: `${pct}%`,
+            background:
+              "linear-gradient(to right, #06b6d4, #14b8a6, #10b981)",
+          }}
+        />
+      </div>
+
+      {/* Logo + step info */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <img
+          src={FOUNTAIN_LIFE_LOGO}
+          alt="Fountain Life"
+          className="h-8 sm:h-10 w-auto object-contain"
+        />
+        <div className="text-right">
+          <p className="text-xs text-muted-foreground font-medium">
+            Step {step} of {STEPS.length}
+          </p>
+          <p
+            className="text-xs font-semibold"
+            style={{ color: "#14b8a6" }}
           >
-            Personalize Your
-            <br />
-            <span className="text-yellow-300">Health Journey</span>
-          </h1>
-          <p className="text-base sm:text-lg max-w-xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            Choose from 10 advanced diagnostic tests designed to give you
-            deep insight into your biology — from cancer detection to cellular
-            aging and beyond.
+            {Math.round((step / STEPS.length) * 100)}% Complete
           </p>
         </div>
       </div>
 
-      {/* Value props */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 sm:mb-10">
-        {[
-          {
-            icon: <FlaskConical className="w-6 h-6 text-primary" />,
-            title: "Clinically Validated",
-            desc: "Every test is backed by peer-reviewed science and lab-certified results.",
-          },
-          {
-            icon: <Shield className="w-6 h-6 text-primary" />,
-            title: "HIPAA Compliant",
-            desc: "Your health data is encrypted and protected at every step.",
-          },
-          {
-            icon: <Sparkles className="w-6 h-6 text-primary" />,
-            title: "Actionable Insights",
-            desc: "Receive personalized recommendations based on your unique results.",
-          },
-        ].map((item) => (
+      {/* Step indicators */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-5">
+        <div className="flex items-start justify-between relative">
+          {/* Connector line */}
+          <div className="absolute top-5 sm:top-6 left-0 right-0 h-0.5 bg-border z-0" />
           <div
-            key={item.title}
-            className="bg-card border border-border rounded-xl p-5 text-left"
-          >
-            <div className="mb-3">{item.icon}</div>
-            <h3 className="font-semibold text-foreground mb-1">{item.title}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {item.desc}
-            </p>
-          </div>
-        ))}
-      </div>
+            className="absolute top-5 sm:top-6 left-0 h-0.5 z-0 transition-all duration-700"
+            style={{
+              width: step === 1 ? "0%" : step === 2 ? "50%" : "100%",
+              background:
+                "linear-gradient(to right, #06b6d4, #14b8a6, #10b981)",
+            }}
+          />
 
-      <Button
-        size="lg"
-        onClick={onNext}
-        className="w-full sm:w-auto px-10 py-6 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
-      >
-        Browse Add-On Tests
-        <ArrowRight className="ml-2 w-5 h-5" />
-      </Button>
+          {STEPS.map((s) => {
+            const isActive = step === s.id;
+            const isDone = step > s.id;
+            return (
+              <div
+                key={s.id}
+                className="flex flex-col items-center gap-1.5 z-10 flex-1"
+              >
+                <div
+                  className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all duration-500 ${
+                    isDone
+                      ? "bg-white"
+                      : isActive
+                      ? "bg-white"
+                      : "bg-white/80"
+                  }`}
+                  style={{
+                    borderColor: isDone || isActive ? "#14b8a6" : "#e2e8f0",
+                    color: isDone || isActive ? "#14b8a6" : "#94a3b8",
+                  }}
+                >
+                  {isDone ? (
+                    <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                  ) : (
+                    s.id
+                  )}
+                </div>
+                <div className="text-center">
+                  <p
+                    className={`text-xs font-semibold leading-tight ${
+                      isActive
+                        ? "text-foreground"
+                        : isDone
+                        ? "text-muted-foreground"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {s.label}
+                  </p>
+                  <p className="text-xs text-muted-foreground hidden sm:block">
+                    {s.sub}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Step 1: Overview ─────────────────────────────────────────────────────────
+function StepIntro({ onNext }: { onNext: () => void }) {
+  return (
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-white rounded-xl border border-border shadow-sm p-8 sm:p-12 text-center">
+        {/* Logo */}
+        <img
+          src={FOUNTAIN_LIFE_LOGO}
+          alt="Fountain Life"
+          className="h-12 sm:h-14 w-auto object-contain mx-auto mb-6"
+        />
+
+        <h1
+          className="text-3xl sm:text-4xl font-bold text-foreground mb-3"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          Health Add-On Services
+        </h1>
+        <p className="text-muted-foreground text-base sm:text-lg mb-8 leading-relaxed max-w-lg mx-auto">
+          Extend your Fountain Life program with advanced diagnostic tests
+          designed to give you deeper insight into your biology.
+        </p>
+
+        {/* Value props */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-left">
+          {[
+            {
+              icon: <FlaskConical className="w-5 h-5" style={{ color: "#14b8a6" }} />,
+              title: "Clinically Validated",
+              desc: "Peer-reviewed science, lab-certified results.",
+            },
+            {
+              icon: <Shield className="w-5 h-5" style={{ color: "#14b8a6" }} />,
+              title: "HIPAA Compliant",
+              desc: "Your data is encrypted and protected.",
+            },
+            {
+              icon: <Sparkles className="w-5 h-5" style={{ color: "#14b8a6" }} />,
+              title: "Actionable Insights",
+              desc: "Personalized recommendations from your results.",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="flex flex-col gap-2 p-4 rounded-lg bg-muted/50 border border-border"
+            >
+              {item.icon}
+              <p className="font-semibold text-sm text-foreground">
+                {item.title}
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {item.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <Button
+          size="lg"
+          onClick={onNext}
+          className="w-full sm:w-auto px-10 font-semibold"
+          style={{ backgroundColor: "oklch(0.25 0.08 240)" }}
+        >
+          Browse Add-On Tests
+          <ArrowRight className="ml-2 w-4 h-4" />
+        </Button>
+      </div>
     </div>
   );
 }
@@ -174,25 +224,26 @@ function ProductCard({
   return (
     <button
       onClick={onToggle}
-      className={`w-full text-left rounded-xl border-2 p-4 sm:p-5 transition-all duration-200 card-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+      className={`w-full text-left rounded-lg border-2 p-4 sm:p-5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
         selected
-          ? "border-primary bg-primary/5 shadow-md"
-          : "border-border bg-card hover:border-primary/40"
+          ? "border-teal-500 bg-teal-50/60 shadow-sm"
+          : "border-border bg-white hover:border-teal-300 hover:shadow-sm"
       }`}
+      style={selected ? { "--tw-ring-color": "#14b8a6" } as React.CSSProperties : {}}
       aria-pressed={selected}
     >
       <div className="flex items-start gap-3 sm:gap-4">
-        {/* Checkbox indicator */}
+        {/* Checkbox */}
         <div className="mt-0.5 shrink-0">
           {selected ? (
-            <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+            <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-teal-500" />
           ) : (
-            <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground/50" />
+            <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground/40" />
           )}
         </div>
 
         {/* Icon */}
-        <div className="text-2xl sm:text-3xl shrink-0 leading-none mt-0.5">
+        <div className="text-2xl shrink-0 leading-none mt-0.5">
           {product.icon}
         </div>
 
@@ -204,7 +255,8 @@ function ProductCard({
             </h3>
             <Badge
               variant="secondary"
-              className="text-xs shrink-0 bg-primary/10 text-primary border-0"
+              className="text-xs shrink-0 border-0"
+              style={{ backgroundColor: "#f0fdfa", color: "#0f766e" }}
             >
               {product.category}
             </Badge>
@@ -215,7 +267,10 @@ function ProductCard({
           <p className="text-xs text-muted-foreground/70 leading-relaxed hidden sm:block">
             {product.details}
           </p>
-          <div className="mt-3 font-semibold text-primary text-sm sm:text-base">
+          <div
+            className="mt-3 font-semibold text-sm sm:text-base"
+            style={{ color: "oklch(0.25 0.08 240)" }}
+          >
             {formatPrice(product.price)}
           </div>
         </div>
@@ -243,7 +298,7 @@ function StepSelectProducts({
     .reduce((sum, p) => sum + p.price, 0);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       <div className="text-center mb-6 sm:mb-8">
         <h2
           className="text-2xl sm:text-3xl font-bold text-foreground mb-2"
@@ -252,13 +307,12 @@ function StepSelectProducts({
           Select Your Add-On Tests
         </h2>
         <p className="text-muted-foreground text-sm sm:text-base">
-          Choose one or more tests to add to your health program. Select all
-          that apply.
+          Choose one or more tests to add to your Fountain Life program.
         </p>
       </div>
 
       {/* Product grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-24 sm:mb-28">
         {products.map((product) => (
           <ProductCard
             key={product.id}
@@ -270,43 +324,46 @@ function StepSelectProducts({
       </div>
 
       {/* Sticky bottom bar */}
-      <div className="sticky bottom-4 bg-card border border-border rounded-xl shadow-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <ShoppingCart className="w-5 h-5 text-primary" />
-            <span className="font-semibold text-foreground">
-              {selected.size} test{selected.size !== 1 ? "s" : ""} selected
-            </span>
-          </div>
-          {selected.size > 0 && (
-            <>
-              <Separator orientation="vertical" className="h-5 hidden sm:block" />
-              <span className="text-muted-foreground text-sm">
-                Subtotal:{" "}
-                <span className="font-semibold text-foreground">
-                  {formatPrice(totalCents)}
-                </span>
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border shadow-lg z-50 px-4 py-3 sm:py-4">
+        <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex items-center gap-2">
+              <ShoppingCart className="w-4 h-4 text-muted-foreground" />
+              <span className="font-semibold text-foreground text-sm">
+                {selected.size} test{selected.size !== 1 ? "s" : ""} selected
               </span>
-            </>
-          )}
-        </div>
-        <div className="flex gap-3 w-full sm:w-auto">
-          <Button
-            variant="outline"
-            onClick={onBack}
-            className="flex-1 sm:flex-none"
-          >
-            <ArrowLeft className="mr-2 w-4 h-4" />
-            Back
-          </Button>
-          <Button
-            onClick={onNext}
-            disabled={selected.size === 0}
-            className="flex-1 sm:flex-none font-semibold"
-          >
-            Review Cart
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </Button>
+            </div>
+            {selected.size > 0 && (
+              <>
+                <Separator orientation="vertical" className="h-4 hidden sm:block" />
+                <span className="text-muted-foreground text-sm">
+                  Subtotal:{" "}
+                  <span className="font-semibold text-foreground">
+                    {formatPrice(totalCents)}
+                  </span>
+                </span>
+              </>
+            )}
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button
+              variant="outline"
+              onClick={onBack}
+              className="flex-1 sm:flex-none text-sm"
+            >
+              <ArrowLeft className="mr-1.5 w-4 h-4" />
+              Back
+            </Button>
+            <Button
+              onClick={onNext}
+              disabled={selected.size === 0}
+              className="flex-1 sm:flex-none font-semibold text-sm"
+              style={{ backgroundColor: "oklch(0.25 0.08 240)" }}
+            >
+              Review Cart
+              <ArrowRight className="ml-1.5 w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -331,9 +388,8 @@ function StepCartReview({
       window.location.href = data.checkoutUrl;
     },
     onError: (err) => {
-      toast.error(err.message || "Failed to create checkout session.", {
-        description:
-          "Please ensure your Stripe credentials are configured. See shared/products.ts and server/stripe.ts.",
+      toast.error("Checkout setup required", {
+        description: err.message,
         duration: 8000,
       });
     },
@@ -360,12 +416,15 @@ function StepCartReview({
         </p>
       </div>
 
-      {/* Cart items */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden mb-5">
-        <div className="px-5 py-3 bg-muted/50 border-b border-border">
+      {/* Cart card */}
+      <div className="bg-white border border-border rounded-xl overflow-hidden mb-5 shadow-sm">
+        <div className="px-5 py-3.5 bg-muted/40 border-b border-border flex items-center justify-between">
           <h3 className="font-semibold text-sm text-foreground">
-            Selected Tests ({selectedProducts.length})
+            Selected Tests
           </h3>
+          <span className="text-xs text-muted-foreground">
+            {selectedProducts.length} item{selectedProducts.length !== 1 ? "s" : ""}
+          </span>
         </div>
         <div className="divide-y divide-border">
           {selectedProducts.map((product) => (
@@ -378,35 +437,44 @@ function StepCartReview({
                 <p className="font-medium text-foreground text-sm sm:text-base truncate">
                   {product.name}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {product.category}
-                </p>
+                <p className="text-xs text-muted-foreground">{product.category}</p>
               </div>
-              <span className="font-semibold text-foreground text-sm sm:text-base shrink-0">
+              <span
+                className="font-semibold text-sm sm:text-base shrink-0"
+                style={{ color: "oklch(0.25 0.08 240)" }}
+              >
                 {formatPrice(product.price)}
               </span>
             </div>
           ))}
         </div>
         <div className="px-5 py-4 bg-muted/30 border-t border-border flex justify-between items-center">
-          <span className="font-semibold text-foreground">Total</span>
-          <span className="text-xl font-bold text-primary">
+          <span className="font-semibold text-foreground text-sm">Total</span>
+          <span
+            className="text-xl font-bold"
+            style={{ color: "oklch(0.25 0.08 240)" }}
+          >
             {formatPrice(totalCents)}
           </span>
         </div>
       </div>
 
-      {/* HIPAA / security note */}
-      <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
-        <Shield className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+      {/* HIPAA note */}
+      <div
+        className="flex items-start gap-3 rounded-lg p-4 mb-6 border"
+        style={{
+          backgroundColor: "#f0fdfa",
+          borderColor: "#99f6e4",
+        }}
+      >
+        <Shield className="w-4 h-4 shrink-0 mt-0.5" style={{ color: "#0d9488" }} />
         <div>
-          <p className="text-sm font-medium text-emerald-800">
+          <p className="text-sm font-medium" style={{ color: "#0f766e" }}>
             Secure & HIPAA-Compliant Checkout
           </p>
-          <p className="text-xs text-emerald-700 mt-0.5 leading-relaxed">
+          <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "#115e59" }}>
             Payment is processed by Stripe. Your card details are never stored
-            on our servers. All health data is encrypted and handled in
-            accordance with HIPAA guidelines.
+            on our servers. All health data is handled in accordance with HIPAA.
           </p>
         </div>
       </div>
@@ -416,8 +484,8 @@ function StepCartReview({
         <Button
           variant="outline"
           onClick={onBack}
-          className="flex-1 sm:flex-none"
           disabled={createCheckout.isPending}
+          className="flex-1 sm:flex-none"
         >
           <ArrowLeft className="mr-2 w-4 h-4" />
           Edit Selection
@@ -425,17 +493,18 @@ function StepCartReview({
         <Button
           onClick={handleCheckout}
           disabled={createCheckout.isPending}
-          className="flex-1 font-semibold py-6 text-base shadow-lg hover:shadow-xl transition-all"
+          className="flex-1 font-semibold py-5 text-sm sm:text-base shadow-sm"
+          style={{ backgroundColor: "oklch(0.25 0.08 240)" }}
         >
           {createCheckout.isPending ? (
             <>
-              <Loader2 className="mr-2 w-5 h-5 animate-spin" />
+              <Loader2 className="mr-2 w-4 h-4 animate-spin" />
               Preparing Checkout…
             </>
           ) : (
             <>
               Proceed to Secure Checkout
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <ArrowRight className="ml-2 w-4 h-4" />
             </>
           )}
         </Button>
@@ -444,7 +513,7 @@ function StepCartReview({
   );
 }
 
-// ─── Main Funnel Page ─────────────────────────────────────────────────────────
+// ─── Main Page ────────────────────────────────────────────────────────────────
 export default function Home() {
   const [step, setStep] = useState(1);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -461,41 +530,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Top nav */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container py-3 sm:py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground text-sm font-bold">H</span>
-            </div>
-            <span
-              className="font-semibold text-foreground text-sm sm:text-base"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Health Add-Ons
-            </span>
-          </div>
-          {selected.size > 0 && step < 3 && (
-            <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground">
-              <ShoppingCart className="w-4 h-4" />
-              <span className="font-medium text-foreground">{selected.size}</span>
-              <span className="hidden sm:inline">selected</span>
-            </div>
-          )}
-        </div>
-      </header>
+    <div className="min-h-screen bg-muted/30 flex flex-col">
+      <FountainLifeHeader step={step} />
 
-      {/* Main content */}
-      <main className="container py-8 sm:py-12">
-        <StepIndicator current={step} />
-
+      <main className="flex-1 px-4 sm:px-6 py-8 sm:py-10">
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            <p className="text-muted-foreground text-sm">
-              Loading health tests…
-            </p>
+            <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
+            <p className="text-muted-foreground text-sm">Loading tests…</p>
           </div>
         )}
 
@@ -531,13 +573,17 @@ export default function Home() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-12">
-        <div className="container py-6 text-center text-xs text-muted-foreground">
-          <p>
-            Payments processed securely by{" "}
-            <span className="font-medium text-foreground">Stripe</span>. All
-            health data handled in compliance with HIPAA.
+      <footer className="border-t border-border bg-white mt-auto">
+        <div className="max-w-3xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <img
+            src={FOUNTAIN_LIFE_LOGO}
+            alt="Fountain Life"
+            className="h-6 w-auto object-contain opacity-70"
+          />
+          <p className="text-xs text-muted-foreground text-center sm:text-right">
+            Payments processed by{" "}
+            <span className="font-medium text-foreground">Stripe</span> ·
+            HIPAA compliant · All data encrypted
           </p>
         </div>
       </footer>

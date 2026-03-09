@@ -32,9 +32,7 @@ const STRIPE_SECRET_KEY =
   process.env.STRIPE_SECRET_KEY ||
   "sk_test_REPLACE_WITH_YOUR_STRIPE_SECRET_KEY"; // ← PLACEHOLDER
 
-if (
-  STRIPE_SECRET_KEY === "sk_test_REPLACE_WITH_YOUR_STRIPE_SECRET_KEY"
-) {
+if (STRIPE_SECRET_KEY === "sk_test_REPLACE_WITH_YOUR_STRIPE_SECRET_KEY") {
   console.warn(
     "\n⚠️  [Stripe] WARNING: Using placeholder Stripe secret key.\n" +
       "   Checkout sessions will NOT work until you set STRIPE_SECRET_KEY.\n" +
@@ -46,29 +44,23 @@ export const stripe = new Stripe(STRIPE_SECRET_KEY, {
   apiVersion: "2026-02-25.clover",
 });
 
+export interface CheckoutSessionInput {
+  lineItems: Array<{ price: string; quantity: number }>;
+  successUrl: string;
+  cancelUrl: string;
+}
+
 /**
  * Creates a Stripe Checkout Session with multiple line items.
- *
- * @param lineItems - Array of { stripePriceId, quantity } for each selected product
- * @param successUrl - URL to redirect to after successful payment
- * @param cancelUrl  - URL to redirect to if user cancels checkout
+ * Returns the full Stripe session object (use .url for redirect).
  */
-export async function createCheckoutSession(
-  lineItems: Array<{ stripePriceId: string; quantity: number }>,
-  successUrl: string,
-  cancelUrl: string
-): Promise<string> {
+export async function createCheckoutSession(input: CheckoutSessionInput) {
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    line_items: lineItems.map((item) => ({
-      price: item.stripePriceId,
-      quantity: item.quantity,
-    })),
-    success_url: successUrl,
-    cancel_url: cancelUrl,
-    // Optional: collect billing address
+    line_items: input.lineItems,
+    success_url: input.successUrl,
+    cancel_url: input.cancelUrl,
     billing_address_collection: "auto",
-    // Optional: allow promo codes
     allow_promotion_codes: true,
   });
 
@@ -76,5 +68,5 @@ export async function createCheckoutSession(
     throw new Error("Stripe did not return a checkout URL.");
   }
 
-  return session.url;
+  return session;
 }

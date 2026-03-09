@@ -16,3 +16,17 @@
 - [x] Write vitest tests for Stripe checkout session procedure (8 tests passing)
 - [x] Save checkpoint
 - [x] Replace emoji product icons with clean Lucide React icons in Fountain Life brand colors
+
+## Phase 2 — Location-Aware Admin System
+
+- [x] Add locations, products, location_products tables to schema and run migration
+- [x] Build tRPC procedures: admin CRUD for locations and products
+- [x] Build tRPC procedures: toggle product active/inactive per location
+- [x] Build tRPC procedures: patient-facing get products by location
+- [x] Build admin panel: location manager (add/edit/delete locations)
+- [x] Build admin panel: product manager per location (add product with Stripe Price ID, toggle active)
+- [x] Update patient funnel: Step 1 location selector
+- [x] Update patient funnel: Step 2 loads products dynamically from selected location
+- [x] Seed 5 default locations and 10 default products
+- [x] Write tests for new procedures (16 passing)
+- [x] Save checkpoint and push to GitHub

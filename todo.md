@@ -36,3 +36,4 @@
 - [x] Add admin link in site header (visible only to admin-role users when logged in)
 - [x] Add subtle "Admin Access" link in footer for initial login
 - [x] Ensure admin panel has a back-to-site link
+- [x] Remove hero title, subtitle, and three feature cards from Step 1 (go straight to location selector)

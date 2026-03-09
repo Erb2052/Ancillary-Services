@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import {
   CheckCircle2, Circle, ShoppingCart, ArrowRight, ArrowLeft,
-  Loader2, Shield, Sparkles, FlaskConical, MapPin, Settings,
+  Loader2, Shield, FlaskConical, MapPin, Settings,
   ScanLine, Timer, Leaf, TestTube, Activity, Zap,
   HeartPulse, BrainCircuit, ShieldCheck, type LucideIcon,
 } from "lucide-react";
@@ -194,33 +194,6 @@ export default function Home() {
         {/* ── STEP 1: Location Selector ─────────────────────────────────── */}
         {step === 1 && (
           <div className="bg-white rounded-xl border border-border shadow-sm p-6 sm:p-10">
-            <div className="text-center mb-8">
-              <img src={FOUNTAIN_LIFE_LOGO} alt="Fountain Life" className="h-10 sm:h-12 w-auto object-contain mx-auto mb-5" />
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
-                Health Add-On Services
-              </h1>
-              <p className="text-muted-foreground text-sm sm:text-base max-w-md mx-auto leading-relaxed">
-                Extend your Fountain Life program with advanced diagnostic tests. Start by selecting your clinic location.
-              </p>
-            </div>
-
-            {/* Trust badges */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              {[
-                { icon: FlaskConical, title: "Clinically Validated", desc: "Peer-reviewed science, lab-certified results." },
-                { icon: Shield, title: "HIPAA Compliant", desc: "Your data is encrypted and protected." },
-                { icon: Sparkles, title: "Actionable Insights", desc: "Personalized recommendations from your results." },
-              ].map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="border border-border rounded-lg p-3 sm:p-4 text-center">
-                  <Icon className="w-5 h-5 mx-auto mb-2" style={{ color: "#14b8a6" }} />
-                  <p className="text-xs sm:text-sm font-semibold text-foreground">{title}</p>
-                  <p className="text-xs text-muted-foreground mt-1 hidden sm:block">{desc}</p>
-                </div>
-              ))}
-            </div>
-
-            <Separator className="mb-8" />
-
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin className="w-4 h-4" style={{ color: "#0d9488" }} />

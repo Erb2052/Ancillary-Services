@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,8 +14,38 @@ import {
   Shield,
   Sparkles,
   FlaskConical,
+  ScanLine,
+  Timer,
+  Leaf,
+  TestTube,
+  Activity,
+  Zap,
+  HeartPulse,
+  BrainCircuit,
+  ShieldCheck,
+  type LucideIcon,
 } from "lucide-react";
+
+// ─── Icon Map ─────────────────────────────────────────────────────────────────
+const ICON_MAP: Record<string, LucideIcon> = {
+  ScanLine,
+  FlaskConical,
+  Timer,
+  Leaf,
+  TestTube,
+  Activity,
+  Zap,
+  HeartPulse,
+  BrainCircuit,
+  ShieldCheck,
+};
+
 import type { HealthProduct } from "../../../shared/products";
+
+function ProductIcon({ name, className, style }: { name: string; className?: string; style?: React.CSSProperties }) {
+  const Icon = ICON_MAP[name] ?? FlaskConical;
+  return <Icon className={className} style={style} />;
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const FOUNTAIN_LIFE_LOGO =
@@ -243,8 +273,15 @@ function ProductCard({
         </div>
 
         {/* Icon */}
-        <div className="text-2xl shrink-0 leading-none mt-0.5">
-          {product.icon}
+        <div
+          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+          style={{ backgroundColor: "#f0fdfa" }}
+        >
+          <ProductIcon
+            name={product.lucideIcon}
+            className="w-5 h-5"
+            style={{ color: "#0d9488" }}
+          />
         </div>
 
         {/* Content */}
@@ -432,7 +469,16 @@ function StepCartReview({
               key={product.id}
               className="flex items-center gap-3 sm:gap-4 px-5 py-4"
             >
-              <span className="text-xl sm:text-2xl shrink-0">{product.icon}</span>
+              <div
+                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                style={{ backgroundColor: "#f0fdfa" }}
+              >
+                <ProductIcon
+                  name={product.lucideIcon}
+                  className="w-5 h-5"
+                  style={{ color: "#0d9488" }}
+                />
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-foreground text-sm sm:text-base truncate">
                   {product.name}

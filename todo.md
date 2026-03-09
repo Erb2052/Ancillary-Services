@@ -30,3 +30,9 @@
 - [x] Seed 5 default locations and 10 default products
 - [x] Write tests for new procedures (16 passing)
 - [x] Save checkpoint and push to GitHub
+
+## Phase 3 — Admin Access Improvements
+
+- [x] Add admin link in site header (visible only to admin-role users when logged in)
+- [x] Add subtle "Admin Access" link in footer for initial login
+- [x] Ensure admin panel has a back-to-site link

@@ -6,10 +6,12 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import {
   CheckCircle2, Circle, ShoppingCart, ArrowRight, ArrowLeft,
-  Loader2, Shield, Sparkles, FlaskConical, MapPin,
+  Loader2, Shield, Sparkles, FlaskConical, MapPin, Settings,
   ScanLine, Timer, Leaf, TestTube, Activity, Zap,
   HeartPulse, BrainCircuit, ShieldCheck, type LucideIcon,
 } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
 // ─── Icon Map ─────────────────────────────────────────────────────────────────
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -86,6 +88,8 @@ function ProductCard({ product, selected, onToggle }: { product: Product; select
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function Home() {
+  const { user, isAuthenticated } = useAuth();
+  const isAdmin = user?.role === "admin";
   const [step, setStep] = useState(1);
   const [selectedLocationId, setSelectedLocationId] = useState<number | null>(null);
   const [selectedLocationName, setSelectedLocationName] = useState("");
@@ -139,9 +143,22 @@ export default function Home() {
         <div className="h-1.5 w-full" style={{ background: "linear-gradient(to right, #06b6d4, #14b8a6, #10b981)" }} />
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <img src={FOUNTAIN_LIFE_LOGO} alt="Fountain Life" className="h-8 sm:h-10 w-auto object-contain" />
-          <div className="text-right">
-            <p className="text-xs font-semibold text-foreground">Step {step} of {STEPS.length}</p>
-            <p className="text-xs font-bold" style={{ color: "#0d9488" }}>{progress}% Complete</p>
+          <div className="flex items-center gap-3">
+            {/* Admin button — only visible to admin users */}
+            {isAdmin && (
+              <a
+                href="/admin"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
+                style={{ borderColor: "#0d9488", color: "#0d9488", backgroundColor: "#f0fdfa" }}
+              >
+                <Settings className="w-3.5 h-3.5" />
+                Admin Panel
+              </a>
+            )}
+            <div className="text-right">
+              <p className="text-xs font-semibold text-foreground">Step {step} of {STEPS.length}</p>
+              <p className="text-xs font-bold" style={{ color: "#0d9488" }}>{progress}% Complete</p>
+            </div>
           </div>
         </div>
         {/* Progress bar */}
@@ -405,7 +422,12 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
           <img src={FOUNTAIN_LIFE_LOGO} alt="Fountain Life" className="h-6 w-auto object-contain opacity-70" />
           <p className="text-xs text-muted-foreground text-center sm:text-right">
-            Payments processed by <span className="font-medium text-foreground">Stripe</span> · HIPAA compliant · <a href="/admin" className="hover:underline">Admin</a>
+            Payments processed by <span className="font-medium text-foreground">Stripe</span> · HIPAA compliant
+            {isAdmin ? (
+              <> · <a href="/admin" className="font-medium hover:underline" style={{ color: "#0d9488" }}>Admin Panel</a></>
+            ) : (
+              <> · <a href={getLoginUrl()} className="hover:underline opacity-50">Staff Login</a></>
+            )}
           </p>
         </div>
       </footer>
